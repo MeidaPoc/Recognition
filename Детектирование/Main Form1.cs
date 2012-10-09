@@ -277,5 +277,10 @@ namespace Face_Recognition
 
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Clear_Faces_Found();
+        }
+
     }
 }
