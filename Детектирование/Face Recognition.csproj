@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classifier_Train.cs" />
+    <Compile Include="InfoFounded.cs" />
     <Compile Include="Main Form1.cs">
       <SubType>Form</SubType>
     </Compile>

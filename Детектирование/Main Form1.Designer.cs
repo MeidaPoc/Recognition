@@ -36,6 +36,8 @@
             this.message_bar = new System.Windows.Forms.Label();
             this.image_PICBX = new System.Windows.Forms.PictureBox();
             this.Faces_Found_Panel = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelcontrol = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.image_PICBX)).BeginInit();
             this.SuspendLayout();
@@ -47,7 +49,7 @@
             this.trainToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(885, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(880, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -56,21 +58,21 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "&File";
             this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // trainToolStripMenuItem
             // 
             this.trainToolStripMenuItem.Name = "trainToolStripMenuItem";
-            this.trainToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.trainToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.trainToolStripMenuItem.Text = "&Train";
             this.trainToolStripMenuItem.Click += new System.EventHandler(this.trainToolStripMenuItem_Click);
             // 
@@ -78,7 +80,7 @@
             // 
             this.message_bar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.message_bar.AutoSize = true;
-            this.message_bar.Location = new System.Drawing.Point(12, 451);
+            this.message_bar.Location = new System.Drawing.Point(12, 745);
             this.message_bar.Name = "message_bar";
             this.message_bar.Size = new System.Drawing.Size(53, 13);
             this.message_bar.TabIndex = 1;
@@ -86,30 +88,52 @@
             // 
             // image_PICBX
             // 
-            this.image_PICBX.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
-            this.image_PICBX.Location = new System.Drawing.Point(12, 27);
+            this.image_PICBX.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.image_PICBX.Location = new System.Drawing.Point(9, 27);
             this.image_PICBX.Name = "image_PICBX";
-            this.image_PICBX.Size = new System.Drawing.Size(658, 421);
+            this.image_PICBX.Size = new System.Drawing.Size(859, 609);
             this.image_PICBX.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.image_PICBX.TabIndex = 2;
             this.image_PICBX.TabStop = false;
             // 
             // Faces_Found_Panel
             // 
-            this.Faces_Found_Panel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.Faces_Found_Panel.AllowDrop = true;
+            this.Faces_Found_Panel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.Faces_Found_Panel.AutoScroll = true;
-            this.Faces_Found_Panel.Location = new System.Drawing.Point(676, 27);
+            this.Faces_Found_Panel.Location = new System.Drawing.Point(9, 642);
             this.Faces_Found_Panel.Name = "Faces_Found_Panel";
-            this.Faces_Found_Panel.Size = new System.Drawing.Size(186, 421);
+            this.Faces_Found_Panel.Size = new System.Drawing.Size(859, 100);
             this.Faces_Found_Panel.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 35);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "label1";
+            // 
+            // labelcontrol
+            // 
+            this.labelcontrol.AutoSize = true;
+            this.labelcontrol.Location = new System.Drawing.Point(387, 749);
+            this.labelcontrol.Name = "labelcontrol";
+            this.labelcontrol.Size = new System.Drawing.Size(72, 13);
+            this.labelcontrol.TabIndex = 5;
+            this.labelcontrol.Text = "Container text";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(885, 473);
+            this.ClientSize = new System.Drawing.Size(880, 767);
+            this.Controls.Add(this.labelcontrol);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.Faces_Found_Panel);
             this.Controls.Add(this.image_PICBX);
             this.Controls.Add(this.message_bar);
@@ -118,6 +142,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Main Program";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.image_PICBX)).EndInit();
@@ -135,6 +160,8 @@
         private System.Windows.Forms.Label message_bar;
         private System.Windows.Forms.PictureBox image_PICBX;
         private System.Windows.Forms.Panel Faces_Found_Panel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelcontrol;
     }
 }
 

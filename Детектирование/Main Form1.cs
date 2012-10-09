@@ -29,6 +29,9 @@ namespace Face_Recognition
         Image<Gray, byte> result, TrainedFace = null;
         Image<Gray, byte> gray_frame = null;
 
+        List<InfoFounded> founded = new List<InfoFounded>();
+        InfoFounded current_info;
+
         Capture grabber;
 
         public HaarCascade Face = new HaarCascade(Application.StartupPath + "/Cascades/haarcascade_frontalface_alt2.xml");//haarcascade_frontalface_alt_tree.xml");
@@ -192,37 +195,71 @@ namespace Face_Recognition
             faces_count = 0;
             faces_panel_Y = 0;
             faces_panel_X = 0;
+            founded.Clear();
         }
         void ADD_Face_Found(Image<Gray, Byte> img_found, string name_person)
         {
-            PictureBox PI = new PictureBox();
-            PI.Location = new Point(faces_panel_X, faces_panel_Y);
-            PI.Height = 80;
-            PI.Width = 80;
-            PI.SizeMode = PictureBoxSizeMode.StretchImage;
-            PI.Image = img_found.ToBitmap();
-            Label LB = new Label();
-            LB.Text = name_person;
-            LB.Location = new Point(faces_panel_X, faces_panel_Y + 80);
-            LB.Width = 50;
-            LB.Height = 15;
-           
-            this.Faces_Found_Panel.Controls.Add(PI);
-            this.Faces_Found_Panel.Controls.Add(LB);
-            faces_count++;
-            if (faces_count == 2)
+            if (""==name_person)
             {
-                faces_panel_X = 0;
-                faces_panel_Y += 100;
-                faces_count = 0;
+                return ;                
             }
-            else faces_panel_X += 85;
+            current_info = IsInPanel(name_person);
+            if (!(null == current_info))
+                {
+                    this.Faces_Found_Panel.Controls.RemoveAt(current_info.indexOfPix);
+                    PictureBox PI = new PictureBox();
+                    PI.Location = new Point(current_info.x, current_info.y);
+                    PI.Height = 80;
+                    PI.Width = 80;
+                    PI.SizeMode = PictureBoxSizeMode.StretchImage;
+                    PI.Image = img_found.ToBitmap();
+                    this.Faces_Found_Panel.Controls.Add(PI);
+                    current_info.indexOfPix = this.Faces_Found_Panel.Controls.IndexOf(PI);
+                }
+                else
+                {
+                    PictureBox PI = new PictureBox();
+                    PI.Location = new Point(faces_panel_X, faces_panel_Y);
+                    PI.Height = 80;
+                    PI.Width = 80;
+                    PI.SizeMode = PictureBoxSizeMode.StretchImage;
+                    PI.Image = img_found.ToBitmap();
+                    Label LB = new Label();
+                    LB.Text = name_person;
+                    LB.Location = new Point(faces_panel_X, faces_panel_Y + 80);
+                    LB.Width = 50;
+                    LB.Height = 15;
 
-            if (Faces_Found_Panel.Controls.Count > 10)
-            {
-                Clear_Faces_Found();
-            }
+                    this.Faces_Found_Panel.Controls.Add(PI);
+                    this.Faces_Found_Panel.Controls.Add(LB);
+                    current_info = new InfoFounded(this.Faces_Found_Panel.Controls.IndexOf(PI),name_person,faces_panel_X,faces_panel_Y);
+                    founded.Add(current_info);
 
+                    faces_count++;
+                    /*if (faces_count == 5)
+                    {
+                        faces_panel_X = 0;
+                        faces_panel_Y += 100;
+                        faces_count = 0;
+                    }
+                    else*/
+                    faces_panel_X += 85;
+
+                    if (Faces_Found_Panel.Controls.Count > 14)
+                    {
+                        Clear_Faces_Found();
+                    }
+                }
+        }
+
+        private InfoFounded IsInPanel(string name_person)
+        {
+            foreach(InfoFounded found in founded)
+                if (name_person == (found.Name))
+                {
+                    return found;
+                }
+            return null;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -231,6 +268,11 @@ namespace Face_Recognition
         }
 
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
         {
 
         }
