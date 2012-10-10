@@ -29,6 +29,7 @@ namespace Face_Recognition
         //Images for finding face
         Image<Bgr, Byte> currentFrame;
         Image<Gray, byte> result = null;
+        Image<Gray, byte> result_for_object = null;
         Image<Gray, byte> gray_frame = null;
 
         //Classifier
@@ -53,6 +54,7 @@ namespace Face_Recognition
         List<string> NamestoWrite = new List<string>();
         List<string> NamesforFile = new List<string>();
         XmlDocument docu = new XmlDocument();
+        XmlDocument docu_O = new XmlDocument();
 
         //Variables
         Form1 Parent;
@@ -249,6 +251,111 @@ namespace Face_Recognition
             }                
         }
 
+        //Saving The Data
+        private bool save_training_data_for_objects(Image obj_data)
+        {
+            try
+            {
+                Random rand = new Random();
+                bool file_create = true;
+                string objectname = "object_" + textBoxObject.Text + "_" + rand.Next().ToString() + ".jpg";
+                while (file_create)
+                {
+
+                    if (!File.Exists(Application.StartupPath + "/TrainedObjects/ObjectsName"))
+                    {
+                        file_create = false;
+                    }
+                    else
+                    {
+                        objectname = "object_" + textBoxObject.Text + "_" + rand.Next().ToString() + ".jpg";
+                    }
+                }
+
+
+                if (Directory.Exists(Application.StartupPath + "/TrainedObjects/"))
+                {
+                    obj_data.Save(Application.StartupPath + "/TrainedObjects/" + objectname, ImageFormat.Jpeg);
+                }
+                else
+                {
+                    Directory.CreateDirectory(Application.StartupPath + "/TrainedObjects/");
+                    obj_data.Save(Application.StartupPath + "/TrainedObjects/" + objectname, ImageFormat.Jpeg);
+                }
+                if (File.Exists(Application.StartupPath + "/TrainedObjects/TrainedLabels.xml"))
+                {
+                    //File.AppendAllText(Application.StartupPath + "/TrainedFaces/TrainedLabels.txt", NAME_PERSON.Text + "\n\r");
+                    bool loading = true;
+                    while (loading)
+                    {
+                        try
+                        {
+                            docu_O.Load(Application.StartupPath + "/TrainedObjects/TrainedLabels.xml");
+                            loading = false;
+                        }
+                        catch
+                        {
+                            docu_O = null;
+                            docu_O = new XmlDocument();
+                            Thread.Sleep(10);
+                        }
+                    }
+
+                    //Get the root element
+                    XmlElement root = docu_O.DocumentElement;
+
+                    XmlElement object_D = docu_O.CreateElement("OBJECT");
+                    XmlElement title_D = docu_O.CreateElement("TITLE");
+                    XmlElement file_D = docu_O.CreateElement("FILE");
+
+                    //Add the values for each nodes
+                    //name.Value = textBoxName.Text;
+                    //age.InnerText = textBoxAge.Text;
+                    //gender.InnerText = textBoxGender.Text;
+                    title_D.InnerText = textBoxObject.Text;
+                    file_D.InnerText = objectname;
+
+                    //Construct the Person element
+                    //person.Attributes.Append(name);
+                    object_D.AppendChild(title_D);
+                    object_D.AppendChild(file_D);
+
+                    //Add the New person element to the end of the root element
+                    root.AppendChild(object_D);
+
+                    //Save the document
+                    docu.Save(Application.StartupPath + "/TrainedObjects/TrainedLabels.xml");
+                    //XmlElement child_element = docu.CreateElement("FACE");
+                    //docu.AppendChild(child_element);
+                    //docu.Save("TrainedLabels.xml");
+                }
+                else
+                {
+                    FileStream FS_Objects = File.OpenWrite(Application.StartupPath + "/TrainedObjects/TrainedLabels.xml");
+                    using (XmlWriter writer = XmlWriter.Create(FS_Objects))
+                    {
+                        writer.WriteStartDocument();
+                        writer.WriteStartElement("Objects_For_Training");
+
+                        writer.WriteStartElement("Object");
+                        writer.WriteElementString("TITLE", textBoxObject.Text);
+                        writer.WriteElementString("FILE", objectname);
+                        writer.WriteEndElement();
+
+                        writer.WriteEndElement();
+                        writer.WriteEndDocument();
+                    }
+                    FS_Objects.Close();
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         private ImageCodecInfo GetEncoder(ImageFormat format)
         {
             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
@@ -376,6 +483,9 @@ namespace Face_Recognition
             {
                 Rectangle rectangle2 = new Rectangle(SelectAreaDown.X,SelectAreaDown.Y,
                     SelectAreaUp.X -SelectAreaDown.X,SelectAreaUp.Y -SelectAreaDown.Y);
+                result_for_object = currentFrame.Copy(rectangle2).Convert<Gray, byte>().Resize(100, 100, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
+                result_for_object._EqualizeHist();
+                save_training_data_for_objects(result_for_object.ToBitmap());
                 currentFrame.Draw(rectangle2, new Bgr(Color.Green), 2);
             }
         }
