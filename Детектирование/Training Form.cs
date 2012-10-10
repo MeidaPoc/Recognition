@@ -39,6 +39,9 @@ namespace Face_Recognition
         int results_list_pos = 0;
         int num_faces_to_aquire = 10;
         bool RECORD = false;
+        bool Graberring = false;
+        Point SelectAreaDown = new Point();
+        Point SelectAreaUp = new Point();
 
         //Saving Jpg
         List<Image<Gray, byte>> ImagestoWrite = new List<Image<Gray, byte>>();
@@ -76,13 +79,15 @@ namespace Face_Recognition
         //Camera Start Stop
         public void initialise_capture()
         {
+            Graberring = true;
             grabber = new Capture();
             grabber.QueryFrame();
             //Initialize the FrameGraber event
-            Application.Idle += new EventHandler(FrameGrabber);
+            Application.Idle += new EventHandler(FrameGrabber);            
         }
         private void stop_capture()
         {
+            Graberring = false;
             Application.Idle -= new EventHandler(FrameGrabber);
             if (grabber != null)
             {
@@ -94,46 +99,49 @@ namespace Face_Recognition
         //Process Frame
         void FrameGrabber(object sender, EventArgs e)
         {
+            if (Graberring)
+            {
             //Get the current frame form capture device
             currentFrame = grabber.QueryFrame().Resize(320, 240, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
 
             //Convert it to Grayscale
-            if (currentFrame != null)
-            {
-                gray_frame = currentFrame.Convert<Gray, Byte>();
-
-                //Face Detector
-                MCvAvgComp[][] facesDetected = gray_frame.DetectHaarCascade(Face, 1.2, 10, Emgu.CV.CvEnum.HAAR_DETECTION_TYPE.DO_CANNY_PRUNING, new Size(20, 20));
-
-                //Action for each element detected
-                foreach (MCvAvgComp face_found in facesDetected[0])
+                if (currentFrame != null)
                 {
-                    result = currentFrame.Copy(face_found.rect).Convert<Gray, byte>().Resize(100, 100, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-                    result._EqualizeHist();
-                    face_PICBX.Image = result.ToBitmap();
-                    //draw the face detected in the 0th (gray) channel with blue color
-                    currentFrame.Draw(face_found.rect, new Bgr(Color.Red), 2);
+                    gray_frame = currentFrame.Convert<Gray, Byte>();
 
-                }
-                if (RECORD && facesDetected.Length > 0 && resultImages.Count < num_faces_to_aquire)
-                {
-                    resultImages.Add(result);
-                    count_lbl.Text = "Count: " + resultImages.Count.ToString();
-                    if (resultImages.Count == num_faces_to_aquire)
+                    //Face Detector
+                    MCvAvgComp[][] facesDetected = gray_frame.DetectHaarCascade(Face, 1.2, 10, Emgu.CV.CvEnum.HAAR_DETECTION_TYPE.DO_CANNY_PRUNING, new Size(20, 20));
+
+                    //Action for each element detected
+                    foreach (MCvAvgComp face_found in facesDetected[0])
                     {
-                        ADD_BTN.Enabled = true;
-                        NEXT_BTN.Visible = true;
-                        PREV_btn.Visible = true;
-                        count_lbl.Visible = false;
-                        Single_btn.Visible = true;
-                        ADD_ALL.Visible = true;
-                        RECORD = false;
-                        Application.Idle -= new EventHandler(FrameGrabber);
-                    }
-                }
+                        result = currentFrame.Copy(face_found.rect).Convert<Gray, byte>().Resize(100, 100, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
+                        result._EqualizeHist();
+                        face_PICBX.Image = result.ToBitmap();
+                        //draw the face detected in the 0th (gray) channel with blue color
+                        currentFrame.Draw(face_found.rect, new Bgr(Color.Red), 2);
 
-                image_PICBX.Image = currentFrame.ToBitmap();
+                    }
+                    if (RECORD && facesDetected.Length > 0 && resultImages.Count < num_faces_to_aquire)
+                    {
+                        resultImages.Add(result);
+                        count_lbl.Text = "Count: " + resultImages.Count.ToString();
+                        if (resultImages.Count == num_faces_to_aquire)
+                        {
+                            ADD_BTN.Enabled = true;
+                            NEXT_BTN.Visible = true;
+                            PREV_btn.Visible = true;
+                            count_lbl.Visible = false;
+                            Single_btn.Visible = true;
+                            ADD_ALL.Visible = true;
+                            RECORD = false;
+                            Application.Idle -= new EventHandler(FrameGrabber);
+                        }
+                    }
+                }                
             }
+            if (currentFrame != null)
+            image_PICBX.Image = currentFrame.ToBitmap();
         }
 
         //Saving The Data
@@ -238,9 +246,9 @@ namespace Face_Recognition
             catch (Exception ex)
             {
                 return false;
-            }
-                
+            }                
         }
+
         private ImageCodecInfo GetEncoder(ImageFormat format)
         {
             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
@@ -345,5 +353,64 @@ namespace Face_Recognition
             ADD_ALL.Visible = false;
         }
 
+       
+
+        private void Training_Form_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonStopImage_Click(object sender, EventArgs e)
+        {
+            Graberring = false;
+        }
+
+        private void buttonContinueImage_Click(object sender, EventArgs e)
+        {
+            Graberring = true;
+        }
+
+        private void buttonAddObject_Click(object sender, EventArgs e)
+        {
+            if (!(SelectAreaDown.IsEmpty || SelectAreaUp.IsEmpty))
+            {
+                Rectangle rectangle2 = new Rectangle(SelectAreaDown.X,SelectAreaDown.Y,
+                    SelectAreaUp.X -SelectAreaDown.X,SelectAreaUp.Y -SelectAreaDown.Y);
+                currentFrame.Draw(rectangle2, new Bgr(Color.Green), 2);
+            }
+        }
+
+        private void image_PICBX_MouseDown(object sender, MouseEventArgs e)
+        {
+            int locationX = e.Location.X;
+            int WidthOfPanel = image_PICBX.Width;
+            float fraction1 = (float)locationX / WidthOfPanel;
+            float WidthOfPic = 320;
+            SelectAreaDown.X = (int)(WidthOfPic * fraction1);
+            int locationY = e.Location.Y;
+            int HeightOfPanel = image_PICBX.Height;
+            float fraction2 = (float)locationY / HeightOfPanel;
+            float HeightOfPic = 240;
+            SelectAreaDown.Y = (int)(HeightOfPic * fraction2);
+        }
+
+        private void image_PICBX_MouseUp(object sender, MouseEventArgs e)
+        {
+            int locationX = e.Location.X;
+            int WidthOfPanel = image_PICBX.Width;
+            float fraction1 = (float)locationX / WidthOfPanel;
+            float WidthOfPic = 320;
+            SelectAreaUp.X = (int)(WidthOfPic * fraction1);
+            int locationY = e.Location.Y;
+            int HeightOfPanel = image_PICBX.Height;
+            float fraction2 = (float)locationY / HeightOfPanel;
+            float HeightOfPic = 240;
+            SelectAreaUp.Y = (int)(HeightOfPic * fraction2);
+        }
+
+        private void image_PICBX_MouseMove(object sender, MouseEventArgs e)
+        {
+            labeltest.Text = e.X.ToString() + ":" + e.Y.ToString();
+        }
     }
 }

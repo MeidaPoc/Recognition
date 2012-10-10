@@ -37,7 +37,6 @@
             this.message_bar = new System.Windows.Forms.Label();
             this.image_PICBX = new System.Windows.Forms.PictureBox();
             this.Faces_Found_Panel = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.labelcontrol = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
@@ -111,15 +110,6 @@
             this.Faces_Found_Panel.Size = new System.Drawing.Size(859, 100);
             this.Faces_Found_Panel.TabIndex = 3;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(17, 35);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "label1";
-            // 
             // labelcontrol
             // 
             this.labelcontrol.AutoSize = true;
@@ -141,7 +131,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(880, 767);
             this.Controls.Add(this.labelcontrol);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.Faces_Found_Panel);
             this.Controls.Add(this.image_PICBX);
             this.Controls.Add(this.message_bar);
@@ -168,7 +157,6 @@
         private System.Windows.Forms.Label message_bar;
         private System.Windows.Forms.PictureBox image_PICBX;
         private System.Windows.Forms.Panel Faces_Found_Panel;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelcontrol;
         private System.Windows.Forms.Timer timer1;
     }

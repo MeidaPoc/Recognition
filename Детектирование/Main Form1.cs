@@ -151,8 +151,9 @@ namespace Face_Recognition
                 //Face Detector
                 MCvAvgComp[][] facesDetected = gray_frame.DetectHaarCascade(Face, 1.2, 10, Emgu.CV.CvEnum.HAAR_DETECTION_TYPE.DO_CANNY_PRUNING, new Size(50, 50));
 
-                //Action for each element detected
-                
+                //foreach  // for each image in base make MatchTemplate
+
+                //Action for each element detected                
                 Parallel.ForEach(facesDetected[0], face_found =>
                     {
                         try

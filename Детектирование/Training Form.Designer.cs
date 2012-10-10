@@ -42,6 +42,12 @@
             this.Single_btn = new System.Windows.Forms.Button();
             this.count_lbl = new System.Windows.Forms.Label();
             this.ADD_ALL = new System.Windows.Forms.Button();
+            this.buttonStopImage = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.buttonAddObject = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.buttonContinueImage = new System.Windows.Forms.Button();
+            this.labeltest = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.image_PICBX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.face_PICBX)).BeginInit();
             this.SuspendLayout();
@@ -54,6 +60,9 @@
             this.image_PICBX.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.image_PICBX.TabIndex = 3;
             this.image_PICBX.TabStop = false;
+            this.image_PICBX.MouseDown += new System.Windows.Forms.MouseEventHandler(this.image_PICBX_MouseDown);
+            this.image_PICBX.MouseMove += new System.Windows.Forms.MouseEventHandler(this.image_PICBX_MouseMove);
+            this.image_PICBX.MouseUp += new System.Windows.Forms.MouseEventHandler(this.image_PICBX_MouseUp);
             // 
             // face_PICBX
             // 
@@ -70,7 +79,7 @@
             this.ADD_BTN.Name = "ADD_BTN";
             this.ADD_BTN.Size = new System.Drawing.Size(139, 23);
             this.ADD_BTN.TabIndex = 5;
-            this.ADD_BTN.Text = "ADD Image";
+            this.ADD_BTN.Text = "ADD Face";
             this.ADD_BTN.UseVisualStyleBackColor = true;
             this.ADD_BTN.Click += new System.EventHandler(this.ADD_BTN_Click);
             // 
@@ -173,11 +182,77 @@
             this.ADD_ALL.Visible = false;
             this.ADD_ALL.Click += new System.EventHandler(this.ADD_ALL_Click);
             // 
+            // buttonStopImage
+            // 
+            this.buttonStopImage.Location = new System.Drawing.Point(182, 346);
+            this.buttonStopImage.Name = "buttonStopImage";
+            this.buttonStopImage.Size = new System.Drawing.Size(95, 23);
+            this.buttonStopImage.TabIndex = 16;
+            this.buttonStopImage.Text = "Stop image";
+            this.buttonStopImage.UseVisualStyleBackColor = true;
+            this.buttonStopImage.Click += new System.EventHandler(this.buttonStopImage_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(8, 346);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(168, 20);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "For capturing object ->";
+            // 
+            // buttonAddObject
+            // 
+            this.buttonAddObject.Location = new System.Drawing.Point(458, 349);
+            this.buttonAddObject.Name = "buttonAddObject";
+            this.buttonAddObject.Size = new System.Drawing.Size(95, 23);
+            this.buttonAddObject.TabIndex = 19;
+            this.buttonAddObject.Text = "Add object";
+            this.buttonAddObject.UseVisualStyleBackColor = true;
+            this.buttonAddObject.Click += new System.EventHandler(this.buttonAddObject_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label5.Location = new System.Drawing.Point(559, 349);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(23, 20);
+            this.label5.TabIndex = 20;
+            this.label5.Text = "or";
+            // 
+            // buttonContinueImage
+            // 
+            this.buttonContinueImage.Location = new System.Drawing.Point(588, 349);
+            this.buttonContinueImage.Name = "buttonContinueImage";
+            this.buttonContinueImage.Size = new System.Drawing.Size(95, 23);
+            this.buttonContinueImage.TabIndex = 21;
+            this.buttonContinueImage.Text = "Continue Image";
+            this.buttonContinueImage.UseVisualStyleBackColor = true;
+            this.buttonContinueImage.Click += new System.EventHandler(this.buttonContinueImage_Click);
+            // 
+            // labeltest
+            // 
+            this.labeltest.AutoSize = true;
+            this.labeltest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labeltest.Location = new System.Drawing.Point(12, 390);
+            this.labeltest.Name = "labeltest";
+            this.labeltest.Size = new System.Drawing.Size(95, 20);
+            this.labeltest.TabIndex = 22;
+            this.labeltest.Text = "Coordinates";
+            // 
             // Training_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(764, 350);
+            this.ClientSize = new System.Drawing.Size(755, 417);
+            this.Controls.Add(this.labeltest);
+            this.Controls.Add(this.buttonContinueImage);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.buttonAddObject);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.buttonStopImage);
             this.Controls.Add(this.ADD_ALL);
             this.Controls.Add(this.count_lbl);
             this.Controls.Add(this.Single_btn);
@@ -195,6 +270,7 @@
             this.Name = "Training_Form";
             this.Text = "Training_Form";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Training_Form_FormClosing);
+            this.Load += new System.EventHandler(this.Training_Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.image_PICBX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.face_PICBX)).EndInit();
             this.ResumeLayout(false);
@@ -217,5 +293,11 @@
         private System.Windows.Forms.Button Single_btn;
         private System.Windows.Forms.Label count_lbl;
         private System.Windows.Forms.Button ADD_ALL;
+        private System.Windows.Forms.Button buttonStopImage;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button buttonAddObject;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button buttonContinueImage;
+        private System.Windows.Forms.Label labeltest;
     }
 }

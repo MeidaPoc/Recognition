@@ -19,5 +19,13 @@ namespace Face_Recognition
             x = X;
             y = Y; 
         }
+
+        public InfoFounded()
+        {
+            indexOfPix = 0;
+            Name = "";
+            x = 0;
+            y = 0;
+        }
     }
 }
