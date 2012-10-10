@@ -45,9 +45,11 @@
             this.buttonStopImage = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonAddObject = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
             this.buttonContinueImage = new System.Windows.Forms.Button();
             this.labeltest = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBoxObject = new System.Windows.Forms.TextBox();
+            this.buttonDeleteDataObjects = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.image_PICBX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.face_PICBX)).BeginInit();
             this.SuspendLayout();
@@ -184,11 +186,12 @@
             // 
             // buttonStopImage
             // 
-            this.buttonStopImage.Location = new System.Drawing.Point(182, 346);
+            this.buttonStopImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonStopImage.Location = new System.Drawing.Point(182, 343);
             this.buttonStopImage.Name = "buttonStopImage";
-            this.buttonStopImage.Size = new System.Drawing.Size(95, 23);
+            this.buttonStopImage.Size = new System.Drawing.Size(95, 29);
             this.buttonStopImage.TabIndex = 16;
-            this.buttonStopImage.Text = "Stop image";
+            this.buttonStopImage.Text = "Stop tracking";
             this.buttonStopImage.UseVisualStyleBackColor = true;
             this.buttonStopImage.Click += new System.EventHandler(this.buttonStopImage_Click);
             // 
@@ -204,7 +207,7 @@
             // 
             // buttonAddObject
             // 
-            this.buttonAddObject.Location = new System.Drawing.Point(458, 349);
+            this.buttonAddObject.Location = new System.Drawing.Point(614, 381);
             this.buttonAddObject.Name = "buttonAddObject";
             this.buttonAddObject.Size = new System.Drawing.Size(95, 23);
             this.buttonAddObject.TabIndex = 19;
@@ -212,23 +215,14 @@
             this.buttonAddObject.UseVisualStyleBackColor = true;
             this.buttonAddObject.Click += new System.EventHandler(this.buttonAddObject_Click);
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(559, 349);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(23, 20);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "or";
-            // 
             // buttonContinueImage
             // 
-            this.buttonContinueImage.Location = new System.Drawing.Point(588, 349);
+            this.buttonContinueImage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonContinueImage.Location = new System.Drawing.Point(182, 381);
             this.buttonContinueImage.Name = "buttonContinueImage";
-            this.buttonContinueImage.Size = new System.Drawing.Size(95, 23);
+            this.buttonContinueImage.Size = new System.Drawing.Size(119, 27);
             this.buttonContinueImage.TabIndex = 21;
-            this.buttonContinueImage.Text = "Continue Image";
+            this.buttonContinueImage.Text = "Continue tracking";
             this.buttonContinueImage.UseVisualStyleBackColor = true;
             this.buttonContinueImage.Click += new System.EventHandler(this.buttonContinueImage_Click);
             // 
@@ -236,20 +230,49 @@
             // 
             this.labeltest.AutoSize = true;
             this.labeltest.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.labeltest.Location = new System.Drawing.Point(12, 390);
+            this.labeltest.Location = new System.Drawing.Point(651, 314);
             this.labeltest.Name = "labeltest";
             this.labeltest.Size = new System.Drawing.Size(95, 20);
             this.labeltest.TabIndex = 22;
             this.labeltest.Text = "Coordinates";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label4.Location = new System.Drawing.Point(283, 346);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(325, 20);
+            this.label4.TabIndex = 23;
+            this.label4.Text = "Select area on image and enter title of object";
+            // 
+            // textBoxObject
+            // 
+            this.textBoxObject.Location = new System.Drawing.Point(614, 348);
+            this.textBoxObject.Name = "textBoxObject";
+            this.textBoxObject.Size = new System.Drawing.Size(135, 20);
+            this.textBoxObject.TabIndex = 24;
+            this.textBoxObject.Text = "OBJECT1";
+            // 
+            // buttonDeleteDataObjects
+            // 
+            this.buttonDeleteDataObjects.Location = new System.Drawing.Point(12, 381);
+            this.buttonDeleteDataObjects.Name = "buttonDeleteDataObjects";
+            this.buttonDeleteDataObjects.Size = new System.Drawing.Size(141, 23);
+            this.buttonDeleteDataObjects.TabIndex = 25;
+            this.buttonDeleteDataObjects.Text = "Delete Data for Objects";
+            this.buttonDeleteDataObjects.UseVisualStyleBackColor = true;
             // 
             // Training_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(755, 417);
+            this.Controls.Add(this.buttonDeleteDataObjects);
+            this.Controls.Add(this.textBoxObject);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.labeltest);
             this.Controls.Add(this.buttonContinueImage);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.buttonAddObject);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.buttonStopImage);
@@ -296,8 +319,10 @@
         private System.Windows.Forms.Button buttonStopImage;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button buttonAddObject;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button buttonContinueImage;
         private System.Windows.Forms.Label labeltest;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBoxObject;
+        private System.Windows.Forms.Button buttonDeleteDataObjects;
     }
 }
