@@ -30,6 +30,7 @@ namespace Face_Recognition
         Image<Gray, byte> gray_frame = null;
 
         List<InfoFounded> founded = new List<InfoFounded>();
+        List<Image<Gray, Byte>> AllObjects = new List<Image<Gray, byte>>();
         InfoFounded current_info;
 
         Capture grabber;
@@ -39,9 +40,12 @@ namespace Face_Recognition
         MCvFont font = new MCvFont(FONT.CV_FONT_HERSHEY_COMPLEX, 0.5, 0.5);
 
         int NumLabels;
-        
+        float PersentOfIdentity = 0.60F;
+
         //Classifier with default training location
         Classifier_Train Eigen_Recog = new Classifier_Train();
+
+        Classifier_Train_Objects Obj_Recog = new Classifier_Train_Objects();
         #endregion
 
         public Form1()
@@ -93,6 +97,7 @@ namespace Face_Recognition
             //Initialize the FrameGraber event
             Application.Idle += new EventHandler(FrameGrabber_Parrellel);
         }
+
         private void stop_capture()
         {
             Application.Idle -= new EventHandler(FrameGrabber_Parrellel);
@@ -138,6 +143,7 @@ namespace Face_Recognition
 
         void FrameGrabber_Parrellel(object sender, EventArgs e)
         {
+            founded.Clear();
             //Get the current frame form capture device
             currentFrame = grabber.QueryFrame().Resize(320, 240, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
 
@@ -151,7 +157,7 @@ namespace Face_Recognition
                 //Face Detector
                 MCvAvgComp[][] facesDetected = gray_frame.DetectHaarCascade(Face, 1.2, 10, Emgu.CV.CvEnum.HAAR_DETECTION_TYPE.DO_CANNY_PRUNING, new Size(50, 50));
 
-                //foreach  // for each image in base make MatchTemplate
+                FindObjects(gray_frame);//foreach  // for each image in base make MatchTemplate
 
                 //Action for each element detected                
                 Parallel.ForEach(facesDetected[0], face_found =>
@@ -162,16 +168,20 @@ namespace Face_Recognition
                             result = currentFrame.Copy(face_found.rect).Convert<Gray, byte>().Resize(100, 100, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
                             result._EqualizeHist();
                             //draw the face detected in the 0th (gray) channel with blue color
-                            currentFrame.Draw(face_found.rect, new Bgr(Color.Red), 2);
+                            //currentFrame.Draw(face_found.rect, new Bgr(Color.Red), 2);
 
                             if (Eigen_Recog.IsTrained)
                             {
                                 string name = Eigen_Recog.Recognise(result);
                                 //Draw the label for each face detected and recognized
-                                currentFrame.Draw(name, ref font, new Point(face_found.rect.X - 2, face_found.rect.Y - 2), new Bgr(Color.LightGreen));
+                                //currentFrame.Draw(name, ref font, new Point(face_found.rect.X - 2, face_found.rect.Y - 2), new Bgr(Color.LightGreen));
                                 ADD_Face_Found(result, name);
+                                founded.Add(new InfoFounded(0, name, face_found.rect));
                             }
-                            
+                            else
+                            {
+                                founded.Add(new InfoFounded(0, " ", face_found.rect));
+                            }
                         }
                         catch
                         {
@@ -180,15 +190,94 @@ namespace Face_Recognition
                             //no data being there to process and this occurss sporadically 
                         }
                     });
+                Drawing();
                 //Show the faces procesed and recognized
                 image_PICBX.Image = currentFrame.ToBitmap();
             }
         }
 
+        private void Drawing()
+        {
+            foreach (InfoFounded found in founded)
+            {
+                currentFrame.Draw(found.Name, ref font, new Point(found.x - 2, found.y - 2), new Bgr(Color.LightGreen));
+                //currentFrame.Draw(new Rectangle(found.x, found.y,found.x+2, found.y+1), new Bgr(Color.LightGreen),2);
+            }
+        }
+
+        private void FindObjects(Image<Gray, byte> gray_frame)
+        {
+            //Image<Gray, Byte> sourceImage = new Image<Gray, Byte>(@"Images/Source.bmp");
+            //Image<Gray, Byte> templateImage = new Image<Gray, Byte>(@"Images/Template.bmp");
+            Image<Gray, float> resultImage;// = sourceImage.MatchTemplate(templateImage, Emgu.CV.CvEnum.TM_TYPE.CV_TM_CCOEFF_NORMED);
+            List<InfoFounded> list = new List<InfoFounded>();
+            InfoFounded current_founded; 
+            Rectangle rect;
+            int width, height;
+                        
+            double[] min, max;
+            double minVal, maxVal, minLoc, maxLoc;
+            Point[] point1, point2;
+            //resultImage.MinMax(out min, out max, out point1, out point2);
+            Point point3 = new Point();
+            //point3.X = point1[0].X + templateImage.Width;
+            //point3.Y = point1[0].Y + templateImage.Height;
+            MCvScalar scalar = new MCvScalar(255);
+            //CvInvoke.cvRectangle(sourceImage.Ptr, point1[0], point3, scalar, 5, Emgu.CV.CvEnum.LINE_TYPE.EIGHT_CONNECTED, 0);
+
+            //this.pictureBox1.Image = sourceImage.ToBitmap();
+            foreach (Image<Gray, Byte> img in Obj_Recog.trainingImages)
+            {
+                current_founded = null;                
+                width = (int)gray_frame.Size.Width - (int)img.Size.Width + 1;
+                height = (int)gray_frame.Size.Height - (int)img.Size.Height + 1;
+                resultImage = new Image<Gray, float>(width, height);
+                //resultImage = gray_frame.MatchTemplate(img, Emgu.CV.CvEnum.TM_TYPE.CV_TM_CCOEFF_NORMED);
+                Emgu.CV.CvInvoke.cvMatchTemplate(gray_frame, img, resultImage, Emgu.CV.CvEnum.TM_TYPE.CV_TM_SQDIFF);
+                //Emgu.CV.CvInvoke.cvMinMaxLoc(result, ref minVal, ref maxVal, ref minLoc, ref maxLoc, IntPtr.Zero);
+                resultImage.MinMax(out min, out max, out point1, out point2);
+                int forcopyX1=point1[0].X;
+                int forcopyY1=point1[0].Y;
+                int forcopyWidth = img.Size.Width;
+                int forcopyHeight = img.Size.Height;
+                Rectangle testcopy = new Rectangle(forcopyX1,forcopyY1,forcopyWidth,forcopyHeight);
+                pictureBox2.Image = gray_frame.Copy(testcopy).ToBitmap();
+                /*float[,,] matches = resultImage.Data;
+                for (int x = 0; x < matches.GetLength(1); x++)
+                {
+                    for (int y = 0; y < matches.GetLength(0); y++)
+                    {
+                        double matchScore = matches[y, x, 0];
+                        if (matchScore > PersentOfIdentity)
+                        {
+                            rect = new Rectangle(new Point(x, y), new Size(img.Width, img.Height));
+                            current_founded = new InfoFounded(0, " ", rect);
+                            labelcontrol.Text = x + ":" + y;
+                            pictureBox2.Image = gray_frame.Copy(rect).ToBitmap();
+                            
+                            //currentFrame.Draw("Obj", ref font, new Point(x - 2,y - 2), new Bgr(Color.LightGreen));                            
+                        }
+                    }
+                }
+                resultImage.MinMax(out min, out max, out point1, out point2);
+                point3.X = point1[0].X + img.Width;
+                point3.Y = point1[0].Y + img.Height;
+                if (!(current_founded == null))
+                {
+                    list.Add(current_founded);
+                }*/
+
+                pictureBox1.Image = img.ToBitmap();                
+                //CvInvoke.cvRectangle(gray_frame.Ptr, point1[0], point3, scalar, 5, Emgu.CV.CvEnum.LINE_TYPE.EIGHT_CONNECTED, 0);
+            }
+        }
+
+        #region var for panel
         //ADD Picture box and label to a panel for each face
         int faces_count = 0;
         int faces_panel_Y = 0;
         int faces_panel_X = 0;
+        #endregion
 
         void Clear_Faces_Found()
         {
@@ -198,6 +287,7 @@ namespace Face_Recognition
             faces_panel_X = 0;
             founded.Clear();
         }
+
         void ADD_Face_Found(Image<Gray, Byte> img_found, string name_person)
         {
             if (""==name_person)
@@ -267,21 +357,21 @@ namespace Face_Recognition
         {
             this.Dispose();
         }
+        
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Clear_Faces_Found();
+        }
 
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void labelcontrol_Click(object sender, EventArgs e)
         {
 
         }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            Clear_Faces_Found();
-        }
-
+        
     }
 }

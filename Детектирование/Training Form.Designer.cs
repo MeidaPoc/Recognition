@@ -262,6 +262,7 @@
             this.buttonDeleteDataObjects.TabIndex = 25;
             this.buttonDeleteDataObjects.Text = "Delete Data for Objects";
             this.buttonDeleteDataObjects.UseVisualStyleBackColor = true;
+            this.buttonDeleteDataObjects.Click += new System.EventHandler(this.buttonDeleteDataObjects_Click);
             // 
             // Training_Form
             // 

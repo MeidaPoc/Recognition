@@ -87,6 +87,7 @@ namespace Face_Recognition
             //Initialize the FrameGraber event
             Application.Idle += new EventHandler(FrameGrabber);            
         }
+
         private void stop_capture()
         {
             Graberring = false;
@@ -251,7 +252,7 @@ namespace Face_Recognition
             }                
         }
 
-        //Saving The Data
+        //Saving The Data For Objects
         private bool save_training_data_for_objects(Image obj_data)
         {
             try
@@ -378,6 +379,7 @@ namespace Face_Recognition
                 Directory.CreateDirectory(Application.StartupPath + "/TrainedFaces/");
             }
         }
+
         
         //Add the image to training data
         private void ADD_BTN_Click(object sender, EventArgs e)
@@ -522,5 +524,15 @@ namespace Face_Recognition
         {
             labeltest.Text = e.X.ToString() + ":" + e.Y.ToString();
         }
+
+        private void buttonDeleteDataObjects_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(Application.StartupPath + "/TrainedObjects/"))
+            {
+                Directory.Delete(Application.StartupPath + "/TrainedObjects/", true);
+                Directory.CreateDirectory(Application.StartupPath + "/TrainedObjects/");
+            }
+        }
+
     }
 }
