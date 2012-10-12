@@ -34,6 +34,7 @@ namespace Face_Recognition
         InfoFounded current_info;
 
         Capture grabber;
+        DetectionV2 detect2 = new DetectionV2();
 
         public HaarCascade Face = new HaarCascade(Application.StartupPath + "/Cascades/haarcascade_frontalface_alt2.xml");//haarcascade_frontalface_alt_tree.xml");
 
@@ -233,7 +234,7 @@ namespace Face_Recognition
                 height = (int)gray_frame.Size.Height - (int)img.Size.Height + 1;
                 resultImage = new Image<Gray, float>(width, height);
                 //resultImage = gray_frame.MatchTemplate(img, Emgu.CV.CvEnum.TM_TYPE.CV_TM_CCOEFF_NORMED);
-                Emgu.CV.CvInvoke.cvMatchTemplate(gray_frame, img, resultImage, Emgu.CV.CvEnum.TM_TYPE.CV_TM_SQDIFF);
+                Emgu.CV.CvInvoke.cvMatchTemplate(gray_frame, img, resultImage, Emgu.CV.CvEnum.TM_TYPE.CV_TM_SQDIFF_NORMED);
                 //Emgu.CV.CvInvoke.cvMinMaxLoc(result, ref minVal, ref maxVal, ref minLoc, ref maxLoc, IntPtr.Zero);
                 resultImage.MinMax(out min, out max, out point1, out point2);
                 int forcopyX1=point1[0].X;
@@ -242,6 +243,11 @@ namespace Face_Recognition
                 int forcopyHeight = img.Size.Height;
                 Rectangle testcopy = new Rectangle(forcopyX1,forcopyY1,forcopyWidth,forcopyHeight);
                 pictureBox2.Image = gray_frame.Copy(testcopy).ToBitmap();
+                if(detect2.Detect_object(gray_frame, img))
+                {
+                    pictureBox3.Image = gray_frame.Copy(new Rectangle(detect2.Location,img.Size)).ToBitmap();
+                }
+                
                 /*float[,,] matches = resultImage.Data;
                 for (int x = 0; x < matches.GetLength(1); x++)
                 {
